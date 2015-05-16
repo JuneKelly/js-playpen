@@ -10,20 +10,19 @@
   };
 
   var _init = function() {
-    console.log('>> Hello!');
+    console.log('>> Welcome to Playpen!');
 
     // Event handlers
-    var form = d3.select('form#taskForm');
-    form.select('#submit').on('click', function() {
-      console.log('>> clicked');
-      var input = form.select('#taskDescription');
+    var taskForm = d3.select('form#taskForm');
+    taskForm.select('#submit').on('click', function() {
+      var input = taskForm.select('#taskDescription');
       var taskDescription = input.property('value');
       addTask(taskDescription);
       input.property('value', '');
     });
 
 
-    window.app = app;
+    window._app = app;
   };
 
   _init();
