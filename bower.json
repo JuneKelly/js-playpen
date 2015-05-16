@@ -8,6 +8,8 @@
   ],
   "dependencies": {
     "d3": "~3.5.5",
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "lodash": "~3.8.0",
+    "postal.js": "~1.0.4"
   }
 }
