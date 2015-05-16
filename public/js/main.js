@@ -14,14 +14,24 @@
 
     // Event handlers
     var taskForm = d3.select('form#taskForm');
-    taskForm.select('#submit').on('click', function() {
+    taskForm.select('[type=submit]').on('click', function() {
       var input = taskForm.select('#taskDescription');
       var taskDescription = input.property('value');
       addTask(taskDescription);
       input.property('value', '');
+      drawTaskList();
     });
 
+    var drawTaskList = function() {
+      var tasks = app.dataStore.tasks;
+      var taskList = d3.select('#taskList');
+      var listItems = taskList.selectAll('li').data(tasks);
+      listItems.enter().append('li').text(function(x) { return x; });
+      listItems.exit().remove();
+    };
 
+
+    drawTaskList();
     window.app = app;
   };
 
