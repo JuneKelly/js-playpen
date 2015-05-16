@@ -29,8 +29,13 @@
     var drawTaskList = function() {
       var tasks = app.dataStore.tasks;
       var listItems = page.taskList.selectAll('li').data(tasks);
-      listItems.enter().append('li').text(function(x) { return x; });
+      listItems.enter().append('li').html(function(x) {
+        return x + '<a class="removeTask">×</a>';
+      });
       listItems.exit().remove();
+      page.taskList.selectAll('.removeTask').on('click', function() {
+        console.log('remove');
+      });
     };
 
 
