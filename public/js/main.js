@@ -22,7 +22,7 @@
     });
 
 
-    window._app = app;
+    window.app = app;
   };
 
   _init();
