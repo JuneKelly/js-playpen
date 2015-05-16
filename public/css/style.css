@@ -1,7 +1,37 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
 body {
-  padding: 50px;
+  margin: 0px auto;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
   color: #00B7FF;
+}
+div {
+  display: inline-block;
+}
+#container {
+  width: 94%;
+  padding-left: 3%;
+  padding-right: 3%;
+  position: relative;
+}
+#header {
+  width: 100%;
+  clear: both;
+}
+#leftColumn {
+  width: 50%;
+  padding: 2%;
+  background-color: #fee;
+  float: left;
+}
+#rightColumn {
+  width: 50%;
+  padding: 2%;
+  background-color: #eef;
+  float: right;
 }
