@@ -1,8 +1,14 @@
 (function() {
+  var helpers = {
+    randomId: function() {
+      return String(Date.now() + Math.random());
+    }
+  };
+
   var app = {
     dataStore: {
       tasks: [
-        {title: 'one', complete: false}
+        {title: 'one', complete: false, id: helpers.randomId()}
       ]
     },
     channels: {
@@ -15,7 +21,7 @@
     taskItem: Handlebars.compile(
       '<span>' +
         '{{task.title}}' +
-        '<a class="removeTask" data-taskid="{{idx}}">×</a>' +
+        '<a class="removeTask" data-taskid="{{task.id}}">×</a>' +
       '</span>')
   };
 
@@ -26,6 +32,7 @@
 
   var addTask = function(taskDescription) {
     var task = {
+      id: helpers.randomId(),
       title: taskDescription,
       done: false
     };
@@ -34,10 +41,10 @@
   };
 
   var removeTask = function(data) {
-    var idx = data.taskId;
-    console.log(idx);
-    app.dataStore.tasks.splice(idx, 1);
-    app.channels.tasks.publish('task:removed', data);
+    var removed = _.remove(app.dataStore.tasks, function(task) {
+      return task.id === data.taskId;
+    });
+    app.channels.tasks.publish('task:removed', removed);
   };
 
   // Renderers
@@ -45,9 +52,9 @@
     var tasks = app.dataStore.tasks;
     var listItems = page.taskList
           .selectAll('li')
-          .data(tasks);
+          .data(tasks, function(d, i) { return d.title; });
     listItems.enter().append('li').html(function(task, i) {
-      return templates.taskItem({task: task, idx: i});
+      return templates.taskItem({task: task});
     });
     listItems.exit().remove();
     page.taskList.selectAll('.removeTask').on('click', function(d, i) {
