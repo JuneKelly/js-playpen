@@ -30,7 +30,7 @@
       done: false
     };
     app.dataStore.tasks.push(task);
-    app.channels.tasks.publish('task.add.complete', task);
+    app.channels.tasks.publish('task:added', task);
   };
 
   var updateTask = function(data) {
@@ -59,20 +59,20 @@
         var input = page.taskForm.select('#taskDescription');
         var taskDescription = input.property('value');
         if(taskDescription) {
-          app.channels.tasks.publish('task.add', taskDescription);
+          app.channels.tasks.publish('task:add', taskDescription);
           input.property('value', '');
         }
       });
 
     // Subscriptions
     var tasks = app.channels.tasks;
-    tasks.subscribe('task.add', function(data, envelope) {
+    tasks.subscribe('task:add', function(data, envelope) {
       addTask(data);
     });
-    tasks.subscribe('task.add.complete', function(data, envelope) {
+    tasks.subscribe('task:added', function(data, envelope) {
       renderTaskList();
     });
-    tasks.subscribe('tasks.update', function(data, envelope) {
+    tasks.subscribe('task:update', function(data, envelope) {
       updateTask(data);
     });
 
