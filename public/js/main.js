@@ -4,6 +4,9 @@
       tasks: [
         {title: 'one', complete: false}
       ]
+    },
+    channels: {
+      tasks: postal.channel('tasks')
     }
   };
 
@@ -17,10 +20,12 @@
       title: taskDescription,
       done: false
     });
+    app.channels.tasks.publish('task.add', taskDescription);
   };
 
   var _init = function() {
     console.log('>> Welcome to Playpen!');
+
 
     // Event handlers
     page.taskForm.select('[type=submit]').on('click', function() {
@@ -28,7 +33,6 @@
       var taskDescription = input.property('value');
       addTask(taskDescription);
       input.property('value', '');
-      renderTaskList();
     });
 
     var renderTaskList = function() {
@@ -43,6 +47,9 @@
       });
     };
 
+    app.channels.tasks.subscribe('task.add', function(data, envelope) {
+      renderTaskList();
+    });
 
     renderTaskList();
     window.app = app;
