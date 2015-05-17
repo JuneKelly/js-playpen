@@ -33,20 +33,27 @@
     app.channels.tasks.publish('task:added', task);
   };
 
-  var updateTask = function(data) {
-    console.log(data);
+  var removeTask = function(data) {
+    var idx = data.taskId;
+    app.dataStore.tasks.splice(idx, 1);
+    app.channels.tasks.publish('task:removed', data);
   };
 
   // Renderers
   var renderTaskList = function() {
     var tasks = app.dataStore.tasks;
-    var listItems = page.taskList.selectAll('li').data(tasks);
+    var listItems = page.taskList
+          .selectAll('li')
+          .data(tasks);
     listItems.enter().append('li').html(function(task, i) {
       return templates.taskItem({task: task, idx: i});
     });
     listItems.exit().remove();
-    page.taskList.selectAll('.removeTask').on('click', function() {
-      console.log('remove');
+    page.taskList.selectAll('.removeTask').on('click', function(d, i) {
+      app.channels.tasks.publish(
+        'task:remove',
+        this.getAttribute('data-taskid')
+      );
     });
   };
 
@@ -72,8 +79,11 @@
     tasks.subscribe('task:added', function(data, envelope) {
       renderTaskList();
     });
-    tasks.subscribe('task:update', function(data, envelope) {
-      updateTask(data);
+    tasks.subscribe('task:remove', function(data, envelope) {
+      removeTask(data);
+    });
+    tasks.subscribe('task:removed', function(data, envelope) {
+      renderTaskList();
     });
 
     renderTaskList();
