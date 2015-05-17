@@ -16,38 +16,44 @@
   };
 
   var addTask = function(taskDescription) {
-    app.dataStore.tasks.push({
+    var task = {
       title: taskDescription,
       done: false
+    };
+    app.dataStore.tasks.push(task);
+    app.channels.tasks.publish('task.add.complete', task);
+  };
+
+  // Renderers
+  var renderTaskList = function() {
+    var tasks = app.dataStore.tasks;
+    var listItems = page.taskList.selectAll('li').data(tasks);
+    listItems.enter().append('li').html(function(task) {
+      return task.title + '<a class="removeTask" data-taskid="1">×</a>';
     });
-    app.channels.tasks.publish('task.add', taskDescription);
+    listItems.exit().remove();
+    page.taskList.selectAll('.removeTask').on('click', function() {
+      console.log('remove');
+    });
   };
 
   var _init = function() {
     console.log('>> Welcome to Playpen!');
 
-
     // Event handlers
     page.taskForm.select('[type=submit]').on('click', function() {
       var input = page.taskForm.select('#taskDescription');
       var taskDescription = input.property('value');
-      addTask(taskDescription);
+      app.channels.tasks.publish('task.add', taskDescription);
       input.property('value', '');
     });
 
-    var renderTaskList = function() {
-      var tasks = app.dataStore.tasks;
-      var listItems = page.taskList.selectAll('li').data(tasks);
-      listItems.enter().append('li').html(function(task) {
-        return task.title + '<a class="removeTask" data-taskid="1">×</a>';
-      });
-      listItems.exit().remove();
-      page.taskList.selectAll('.removeTask').on('click', function() {
-        console.log('remove');
-      });
-    };
-
-    app.channels.tasks.subscribe('task.add', function(data, envelope) {
+    // Subscriptions
+    var tasks = app.channels.tasks;
+    tasks.subscribe('task.add', function(data, envelope) {
+      addTask(data);
+    });
+    tasks.subscribe('task.add.complete', function(data, envelope) {
       renderTaskList();
     });
 
