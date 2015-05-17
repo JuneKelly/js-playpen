@@ -35,6 +35,7 @@
 
   var removeTask = function(data) {
     var idx = data.taskId;
+    console.log(idx);
     app.dataStore.tasks.splice(idx, 1);
     app.channels.tasks.publish('task:removed', data);
   };
@@ -52,7 +53,7 @@
     page.taskList.selectAll('.removeTask').on('click', function(d, i) {
       app.channels.tasks.publish(
         'task:remove',
-        this.getAttribute('data-taskid')
+        {taskId: this.getAttribute('data-taskid')}
       );
     });
   };
