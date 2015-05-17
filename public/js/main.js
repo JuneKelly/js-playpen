@@ -14,7 +14,8 @@
       ]
     },
     channels: {
-      tasks: postal.channel('tasks')
+      tasks: postal.channel('tasks'),
+      notifications: postal.channel('notifications')
     }
   };
 
