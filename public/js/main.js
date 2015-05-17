@@ -15,7 +15,7 @@
     taskItem: Handlebars.compile(
       '<span>' +
         '{{title}}' +
-        '<a class="removeTask" data-taskid="1"×</a>' +
+        '<a class="removeTask" data-taskid="1">×</a>' +
       '</span>')
   };
 
@@ -54,12 +54,15 @@
     console.log('>> Welcome to Playpen!');
 
     // Event handlers
-    page.taskForm.select('[type=submit]').on('click', function() {
-      var input = page.taskForm.select('#taskDescription');
-      var taskDescription = input.property('value');
-      app.channels.tasks.publish('task.add', taskDescription);
-      input.property('value', '');
-    });
+    page.taskForm.select('[type=submit]')
+      .on('click', function() {
+        var input = page.taskForm.select('#taskDescription');
+        var taskDescription = input.property('value');
+        if(taskDescription) {
+          app.channels.tasks.publish('task.add', taskDescription);
+          input.property('value', '');
+        }
+      });
 
     // Subscriptions
     var tasks = app.channels.tasks;
