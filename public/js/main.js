@@ -10,6 +10,15 @@
     }
   };
 
+  // Templates
+  var templates = {
+    taskItem: Handlebars.compile(
+      '<span>' +
+        '{{title}}' +
+        '<a class="removeTask" data-taskid="1"×</a>' +
+      '</span>')
+  };
+
   var page = {
     taskForm: d3.select('form#taskForm'),
     taskList: d3.select('#taskList')
@@ -24,12 +33,16 @@
     app.channels.tasks.publish('task.add.complete', task);
   };
 
+  var updateTask = function(data) {
+    console.log(data);
+  };
+
   // Renderers
   var renderTaskList = function() {
     var tasks = app.dataStore.tasks;
     var listItems = page.taskList.selectAll('li').data(tasks);
     listItems.enter().append('li').html(function(task) {
-      return task.title + '<a class="removeTask" data-taskid="1">×</a>';
+      return templates.taskItem(task);
     });
     listItems.exit().remove();
     page.taskList.selectAll('.removeTask').on('click', function() {
@@ -55,6 +68,9 @@
     });
     tasks.subscribe('task.add.complete', function(data, envelope) {
       renderTaskList();
+    });
+    tasks.subscribe('tasks.update', function(data, envelope) {
+      updateTask(data);
     });
 
     renderTaskList();
