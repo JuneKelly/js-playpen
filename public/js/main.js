@@ -8,7 +8,9 @@
   var app = {
     dataStore: {
       tasks: [
-        {title: 'one', complete: false, id: helpers.randomId()}
+        {title: 'Do the dishes',
+         complete: false,
+         id: helpers.randomId()}
       ]
     },
     channels: {
