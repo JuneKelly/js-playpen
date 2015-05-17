@@ -27,11 +27,6 @@
       '</span>')
   };
 
-  var page = {
-    taskForm: d3.select('form#taskForm'),
-    taskList: d3.select('#taskList')
-  };
-
   var addTask = function(taskDescription) {
     var task = {
       id: helpers.randomId(),
@@ -50,6 +45,11 @@
   };
 
   // Renderers
+  var page = {
+    taskForm: d3.select('form#taskForm'),
+    taskList: d3.select('#taskList')
+  };
+
   var renderTaskList = function() {
     var tasks = app.dataStore.tasks;
     var listItems = page.taskList
