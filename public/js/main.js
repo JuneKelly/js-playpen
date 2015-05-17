@@ -14,8 +14,8 @@
   var templates = {
     taskItem: Handlebars.compile(
       '<span>' +
-        '{{title}}' +
-        '<a class="removeTask" data-taskid="1">×</a>' +
+        '{{task.title}}' +
+        '<a class="removeTask" data-taskid="{{idx}}">×</a>' +
       '</span>')
   };
 
@@ -41,8 +41,8 @@
   var renderTaskList = function() {
     var tasks = app.dataStore.tasks;
     var listItems = page.taskList.selectAll('li').data(tasks);
-    listItems.enter().append('li').html(function(task) {
-      return templates.taskItem(task);
+    listItems.enter().append('li').html(function(task, i) {
+      return templates.taskItem({task: task, idx: i});
     });
     listItems.exit().remove();
     page.taskList.selectAll('.removeTask').on('click', function() {
