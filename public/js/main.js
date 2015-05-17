@@ -1,7 +1,9 @@
 (function() {
   var app = {
     dataStore: {
-      tasks: ['one']
+      tasks: [
+        {title: 'one', complete: false}
+      ]
     }
   };
 
@@ -11,7 +13,10 @@
   };
 
   var addTask = function(taskDescription) {
-    app.dataStore.tasks.push(taskDescription);
+    app.dataStore.tasks.push({
+      title: taskDescription,
+      done: false
+    });
   };
 
   var _init = function() {
@@ -23,14 +28,14 @@
       var taskDescription = input.property('value');
       addTask(taskDescription);
       input.property('value', '');
-      drawTaskList();
+      renderTaskList();
     });
 
-    var drawTaskList = function() {
+    var renderTaskList = function() {
       var tasks = app.dataStore.tasks;
       var listItems = page.taskList.selectAll('li').data(tasks);
-      listItems.enter().append('li').html(function(x) {
-        return x + '<a class="removeTask" data-taskid="1">×</a>';
+      listItems.enter().append('li').html(function(task) {
+        return task.title + '<a class="removeTask" data-taskid="1">×</a>';
       });
       listItems.exit().remove();
       page.taskList.selectAll('.removeTask').on('click', function() {
@@ -39,7 +44,7 @@
     };
 
 
-    drawTaskList();
+    renderTaskList();
     window.app = app;
   };
 
