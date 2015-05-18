@@ -1,7 +1,7 @@
 (function() {
   var helpers = {
     randomId: function() {
-      return String(Date.now() + Math.random());
+      return (Date.now() + Math.random()).toString(16)
     }
   };
 
